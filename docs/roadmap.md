@@ -4,7 +4,7 @@
 
 - Rust package, reusable library, CLI, lockfile, and toolchain pin.
 - CLI smoke tests and packaging/installer failure-path tests.
-- CI, Dependabot, five-target release workflow, checksums, provenance, source
+- CI, Dependabot, four-target release workflow, checksums, provenance, source
   archives, and a checksum-verifying Unix installer.
 - GPL-3.0-or-later license, README, contribution guidance, and documentation.
 
@@ -25,13 +25,19 @@ The alpha is ready for local source builds and testing. A published prerelease i
 still required before release archives and the installer can be used by general
 users.
 
+Local verification on Linux (2026-09-07): 25 Rust tests and 16 Python tests passed,
+along with formatting, Clippy, documentation, shell/workflow linting, and source
+package verification. A live Codex smoke test using `gpt-5.6-luna` generated a
+Conventional Commit and committed a synthetic file in a disposable repository
+with `--yes --no-push`. macOS execution still need GitHub CI results.
+
 ## Distribution maturity
 
 - Publish a stable release after the core workflow is exercised by users.
 - Add a Homebrew tap, then consider core submission once eligible.
 - Select/reserve a Cargo registry package name, then enable publishing.
-- Add WinGet/Scoop or distro packages according to demand.
-- Review macOS notarization, Windows signing, musl binaries, and older-OS support.
+- Add Linux distro packages according to demand.
+- Review macOS notarization, musl binaries, and older-OS support.
 - Add an ownership-aware explicit updater after installer receipts are designed.
 
 ## Later capabilities

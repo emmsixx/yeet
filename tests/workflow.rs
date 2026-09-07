@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 use std::fs;
+#[cfg(unix)]
+use std::os::unix::process::ExitStatusExt;
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, ExitStatus};
 use std::sync::{Arc, Mutex};
 #[cfg(unix)]
 use std::thread;
@@ -128,6 +130,10 @@ struct RecordingRunner {
     prompt: Arc<Mutex<Vec<u8>>>,
 }
 
+fn successful_exit_status() -> ExitStatus {
+    ExitStatus::from_raw(0)
+}
+
 impl ProcessRunner for RecordingRunner {
     fn run(
         &self,
@@ -148,9 +154,8 @@ impl ProcessRunner for RecordingRunner {
             .map(|pair| pair[1].clone())
             .unwrap();
         fs::write(output, r#"{"subject":"feat: generated safely","body":""}"#).unwrap();
-        let status = Command::new("true").status().unwrap();
         Ok(ProcessOutput {
-            status,
+            status: successful_exit_status(),
             stdout: Vec::new(),
             stderr: Vec::new(),
         })
@@ -443,16 +448,28 @@ fn rejected_commit_hook_preserves_git_state() {
 }
 
 #[cfg(unix)]
+fn sleeping_command() -> (std::ffi::OsString, Vec<std::ffi::OsString>) {
+    #[cfg(unix)]
+    {
+        (
+            std::ffi::OsString::from("sh"),
+            vec![
+                std::ffi::OsString::from("-c"),
+                std::ffi::OsString::from("sleep 5"),
+            ],
+        )
+    }
+}
+
+#[cfg(unix)]
 #[test]
 fn process_runner_enforces_timeout_and_cancellation() {
     let runner = SystemProcessRunner;
+    let (timed_executable, timed_args) = sleeping_command();
     let token = CancellationToken::new();
     let timed = runner.run(
-        std::ffi::OsStr::new("sh"),
-        &[
-            std::ffi::OsString::from("-c"),
-            std::ffi::OsString::from("sleep 5"),
-        ],
+        timed_executable.as_os_str(),
+        &timed_args,
         &[],
         Duration::from_millis(60),
         &token,
@@ -464,13 +481,11 @@ fn process_runner_enforces_timeout_and_cancellation() {
 
     let token = CancellationToken::new();
     let cancel = token.clone();
+    let (cancel_executable, cancel_args) = sleeping_command();
     let handle = thread::spawn(move || {
         runner.run(
-            std::ffi::OsStr::new("sh"),
-            &[
-                std::ffi::OsString::from("-c"),
-                std::ffi::OsString::from("sleep 5"),
-            ],
+            cancel_executable.as_os_str(),
+            &cancel_args,
             &[],
             Duration::from_secs(5),
             &cancel,
@@ -483,6 +498,32 @@ fn process_runner_enforces_timeout_and_cancellation() {
         cancelled,
         Err(yeet_cli::adapters::ProcessError::Cancelled)
     ));
+}
+
+#[cfg(unix)]
+#[test]
+fn process_runner_kills_descendants_on_timeout() {
+    let runner = SystemProcessRunner;
+    let started = std::time::Instant::now();
+    let result = runner.run(
+        std::ffi::OsStr::new("sh"),
+        &[
+            std::ffi::OsString::from("-c"),
+            std::ffi::OsString::from("sleep 5 & wait"),
+        ],
+        &[],
+        Duration::from_millis(60),
+        &CancellationToken::new(),
+    );
+    assert!(matches!(
+        result,
+        Err(yeet_cli::adapters::ProcessError::TimedOut(_))
+    ));
+    assert!(
+        started.elapsed() < Duration::from_secs(2),
+        "descendant survived timeout cleanup for {:?}",
+        started.elapsed()
+    );
 }
 
 #[cfg(unix)]

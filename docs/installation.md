@@ -54,24 +54,18 @@ GitHub Release. On Linux run `sha256sum -c ARCHIVE.sha256`; on macOS run
 `shasum -a 256 -c ARCHIVE.sha256`. Replace `ARCHIVE` with the full filename.
 Extract the archive and place the binary in a directory on PATH.
 
-On Windows download the x86_64 ZIP, compare `Get-FileHash -Algorithm SHA256` with
-its sidecar, expand the archive, and place `yeet.exe` in a user-owned directory
-on PATH. There is no PowerShell installer yet.
-
 | Platform | Release target | Build/test baseline |
 | --- | --- | --- |
 | Linux x86_64 | `x86_64-unknown-linux-gnu` | Ubuntu 22.04, glibc 2.35 |
 | Linux ARM64 | `aarch64-unknown-linux-gnu` | Ubuntu 22.04 ARM, glibc 2.35 |
 | macOS Intel | `x86_64-apple-darwin` | macOS 15 Intel |
 | macOS Apple Silicon | `aarch64-apple-darwin` | macOS 15 ARM64 |
-| Windows x86_64 | `x86_64-pc-windows-msvc` | Windows Server 2022 runner |
 
 These are CI baselines, not a tested guarantee for all older OS versions. Alpine
 and other musl systems need a source build; static musl assets are future work.
-Windows ARM64 is not currently packaged. Apple notarization and Windows code
-signing are not configured.
+Apple notarization is not configured.
 
-Release filenames are stable: `yeet-vVERSION-TARGET.tar.gz` or `.zip`, containing
+Release filenames are stable: `yeet-vVERSION-TARGET.tar.gz`, containing
 a matching top-level directory with the binary, GPL license, docs, and examples.
 Each release also carries `SHA256SUMS`, the installer, and a source archive.
 
@@ -98,5 +92,5 @@ No background updating is implemented. See [update design](updates.md).
 
 To uninstall a script/archive install, remove the `yeet` binary from its install
 directory. For Cargo use `cargo uninstall yeet-cli`. Keep `~/.config/yeet` unless
-you also want to remove your future settings and instructions. Homebrew, WinGet,
+you also want to remove your future settings and instructions. Homebrew
 and other package managers are not published channels yet.

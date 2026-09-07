@@ -26,10 +26,8 @@ Before shipping this, implement:
   on any failure and serialize competing updater processes.
 - Tests for interruption, wrong platform/version, tampered downloads, read-only
   locations, package-manager ownership, and rollback.
-- A Windows-specific replacement strategy; a running Windows executable cannot
-  be treated like a Unix binary rename.
 
-Do not self-update Homebrew, WinGet, Cargo, distro, or unknown installations.
+Do not self-update Homebrew, Cargo, distro, or unknown installations.
 Do not infer ownership solely from a writable directory or executable filename.
 
 If background version notifications are added, make them opt-in, cache checks,

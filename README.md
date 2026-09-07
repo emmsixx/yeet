@@ -1,7 +1,7 @@
 # Yeet
 
-A Rust CLI for staging changes, drafting a commit message in your preferred style,
-and committing and pushing after review.
+A Rust CLI for macOS and Linux that stages changes, drafts a commit message in
+your preferred style, and commits and pushes after review.
 
 **Status: first usable alpha.** Yeet stages all changes, validates a manual or
 generated commit message, previews it, commits after approval, and pushes through
@@ -62,9 +62,9 @@ guidance, and (in repository style) sampled local commit messages to the
 configured harness/model service.
 
 Release archives and a checksum-verifying installer are prepared for Linux and
-macOS on x86_64/ARM64, and Windows x86_64. They become usable after a release is
-published. See [installation and updates](docs/installation.md). Homebrew,
-WinGet, and crates.io distribution are planned, not available channels.
+macOS on x86_64/ARM64. They become usable after a release is
+published. See [installation and updates](docs/installation.md). Homebrew
+and crates.io distribution are planned, not available channels.
 
 ## Configuration
 

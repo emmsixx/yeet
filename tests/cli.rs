@@ -41,23 +41,3 @@ fn unsupported_arguments_are_usage_errors() {
     let output = yeet().arg("--not-a-real-option").output().unwrap();
     assert_eq!(output.status.code(), Some(2));
 }
-
-#[cfg(windows)]
-#[test]
-fn windows_config_uses_userprofile_without_home() {
-    let root = tempfile::tempdir().unwrap();
-    let output = yeet()
-        .env_remove("HOME")
-        .env_remove("XDG_CONFIG_HOME")
-        .env("USERPROFILE", root.path())
-        .args(["config", "show"])
-        .output()
-        .unwrap();
-    assert!(output.status.success(), "{:?}", output);
-    let expected = root.path().join(".config/yeet/config.toml");
-    assert!(
-        String::from_utf8(output.stdout)
-            .unwrap()
-            .contains(&expected.display().to_string())
-    );
-}

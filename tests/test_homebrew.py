@@ -14,7 +14,7 @@ class FormulaTests(unittest.TestCase):
         tag = f"v{version()}"
         return "".join(
             f"{'a' * 64}  yeet-{tag}-{target}.tar.gz\n"
-            for target in TARGETS if not target.endswith("windows-msvc")
+            for target in TARGETS
         )
 
     def test_requires_all_four_unix_assets(self):

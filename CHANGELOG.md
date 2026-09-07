@@ -21,5 +21,14 @@ optionally followed by a prerelease suffix. No release has been published yet.
 - Linux/macOS installer with checksum verification and atomic binary replacement.
 - Contributor, installation, configuration, architecture, release, and security docs.
 
+### Fixed
+
+- Suppress process cleanup output and cover descendant termination on timeout.
+
+### Changed
+
+- Support macOS and Linux only, on x86_64 and ARM64. Remove Windows release
+  archives, CI jobs, configuration fallback, and process handling.
+
 Additional harnesses, isolated-index dry-run behavior, account selection,
 background updating, and package-manager publication remain deferred.

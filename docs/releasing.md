@@ -49,7 +49,7 @@ match; mismatched tags fail. Do not retag an already published version.
 ## What automation produces
 
 The release matrix builds and tests natively for Linux x86_64/ARM64, macOS
-x86_64/ARM64, and Windows x86_64. Each release binary passes a version/help smoke
+x86_64/ARM64. Each release binary passes a version/help smoke
 test before packaging. Platform baselines are listed in [installation](installation.md).
 
 `scripts/package.py` creates versioned archives containing the executable, license,
@@ -62,7 +62,7 @@ dependencies are fetched through Cargo using that lockfile.
 The draft job generates GitHub build-provenance attestations and creates a **draft**
 release. Versions containing a prerelease suffix are marked as prereleases. Review
 the notes and download/verify/test the artifacts before publishing the draft.
-Attestations establish build provenance; they are not Apple/Windows code signing.
+Attestations establish build provenance; they are not Apple code signing.
 
 If a workflow fails before the draft is created, rerun the failed jobs after fixing
 the cause. If GitHub already contains a partially uploaded draft, remove that draft
@@ -98,7 +98,7 @@ license identifier, and test `yeet --version`. Formula changes should be PRs
 generated from an already published release. Do not advertise `brew install yeet`
 until that formula/channel actually exists.
 
-WinGet/Scoop and Linux distro packages can consume the same immutable archives
+Linux distro packages can consume the same immutable archives
 and corresponding source. Their version, checksum, ownership, and update behavior
 must be controlled by the package manager. Keep self-updates disabled for those
 builds. Review each package manager's current submission requirements when adding

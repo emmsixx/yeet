@@ -9,7 +9,6 @@ import shutil
 import tarfile
 import tempfile
 import tomllib
-import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = (
@@ -17,7 +16,6 @@ TARGETS = (
     "aarch64-unknown-linux-gnu",
     "x86_64-apple-darwin",
     "aarch64-apple-darwin",
-    "x86_64-pc-windows-msvc",
 )
 
 
@@ -40,26 +38,19 @@ def package(target, tag, binary, output):
         raise ValueError(f"missing release binary: {binary}")
     output.mkdir(parents=True, exist_ok=True)
     name = f"yeet-{tag}-{target}"
-    windows = target.endswith("windows-msvc")
-    archive = output / f"{name}{'.zip' if windows else '.tar.gz'}"
+    archive = output / f"{name}.tar.gz"
     with tempfile.TemporaryDirectory(prefix="yeet-package-") as temporary:
         bundle = Path(temporary) / name
         bundle.mkdir()
-        executable = bundle / ("yeet.exe" if windows else "yeet")
+        executable = bundle / "yeet"
         shutil.copyfile(binary, executable)
         executable.chmod(0o755)
         for filename in ("README.md", "LICENSE", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md"):
             shutil.copyfile(ROOT / filename, bundle / filename)
         shutil.copytree(ROOT / "docs", bundle / "docs")
         shutil.copytree(ROOT / "examples", bundle / "examples")
-        if windows:
-            with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as destination:
-                for entry in sorted(bundle.rglob("*")):
-                    if entry.is_file():
-                        destination.write(entry, entry.relative_to(Path(temporary)))
-        else:
-            with tarfile.open(archive, "w:gz") as destination:
-                destination.add(bundle, arcname=name)
+        with tarfile.open(archive, "w:gz") as destination:
+            destination.add(bundle, arcname=name)
     with archive.open("rb") as source:
         checksum = hashlib.file_digest(source, "sha256").hexdigest()
     archive.with_name(archive.name + ".sha256").write_text(
@@ -78,9 +69,7 @@ def main():
     try:
         validate_tag(args.tag)
         if args.target:
-            binary = args.binary or ROOT / "target" / args.target / "release" / (
-                "yeet.exe" if args.target.endswith("windows-msvc") else "yeet"
-            )
+            binary = args.binary or ROOT / "target" / args.target / "release" / "yeet"
             print(package(args.target, args.tag, binary, args.output))
         elif args.binary:
             parser.error("--binary requires --target")

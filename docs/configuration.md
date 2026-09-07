@@ -8,8 +8,6 @@ Use `$XDG_CONFIG_HOME/yeet/config.toml` when XDG_CONFIG_HOME is absolute, otherw
 to the config. Start with the [complete config example](../examples/config.toml)
 and [Markdown example](../examples/instructions.md).
 
-On Windows, `~` uses `HOME` when set and otherwise `USERPROFILE`.
-
 ## Harness and model
 
 A named profile selects a harness, model, and adapter-specific options:

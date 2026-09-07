@@ -30,8 +30,6 @@ jobs:
             os: macos-15-intel
           - target: aarch64-apple-darwin
             os: macos-15
-          - target: x86_64-pc-windows-msvc
-            os: windows-2022
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
     defaults:
@@ -57,7 +55,6 @@ jobs:
       - name: Smoke test release binary
         run: |
           binary="target/$TARGET/release/yeet"
-          if [[ "$TARGET" == *windows* ]]; then binary="$binary.exe"; fi
           test "$("$binary" --version)" = "yeet ${RELEASE_TAG#v}"
           "$binary" --help
       - name: Package archive and checksum

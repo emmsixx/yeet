@@ -8,7 +8,6 @@ import tarfile
 import tempfile
 import unittest
 from unittest import mock
-import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -25,15 +24,10 @@ class PackagingTests(unittest.TestCase):
             for target in package.TARGETS:
                 with self.subTest(target=target):
                     archive = package.package(target, f"v{package.version()}", binary, root / "dist")
-                    if archive.suffix == ".zip":
-                        with zipfile.ZipFile(archive) as source:
-                            names = source.namelist()
-                            self.assertTrue(any(name.endswith("/yeet.exe") for name in names))
-                    else:
-                        with tarfile.open(archive) as source:
-                            names = source.getnames()
-                            executable = next(item for item in source.getmembers() if item.name.endswith("/yeet"))
-                            self.assertEqual(executable.mode & 0o777, 0o755)
+                    with tarfile.open(archive) as source:
+                        names = source.getnames()
+                        executable = next(item for item in source.getmembers() if item.name.endswith("/yeet"))
+                        self.assertEqual(executable.mode & 0o777, 0o755)
                     for suffix in ("/LICENSE", "/README.md", "/CONTRIBUTING.md", "/SECURITY.md",
                                    "/docs/installation.md", "/examples/config.toml"):
                         self.assertTrue(any(name.endswith(suffix) for name in names), suffix)
@@ -85,7 +79,6 @@ class PackagingTests(unittest.TestCase):
                 self.assertEqual(checksum, prepare_release.digest(output / name))
 
 
-@unittest.skipIf(os.name == "nt", "POSIX installer; Windows uses a ZIP")
 class InstallerTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="yeet-installer-test-")
@@ -119,8 +112,7 @@ esac
         binary = self.root / "binary"
         binary.write_text(f"#!/bin/sh\necho 'yeet {package.version()}'\n", encoding="utf-8")
         for target in package.TARGETS:
-            if not target.endswith("windows-msvc"):
-                package.package(target, self.tag, binary, self.fixture)
+            package.package(target, self.tag, binary, self.fixture)
 
     def command(self, name, content):
         path = self.fake_bin / name

@@ -19,8 +19,6 @@ def formula(tag, checksums):
 
     assets = {}
     for target in TARGETS:
-        if target.endswith("windows-msvc"):
-            continue
         name = f"yeet-{tag}-{target}.tar.gz"
         if name not in entries:
             raise ValueError(f"missing checksum for {name}")

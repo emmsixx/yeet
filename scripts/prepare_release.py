@@ -18,8 +18,7 @@ def digest(path):
 def verify_archives(directory, tag):
     expected = set()
     for target in TARGETS:
-        extension = ".zip" if target.endswith("windows-msvc") else ".tar.gz"
-        name = f"yeet-{tag}-{target}{extension}"
+        name = f"yeet-{tag}-{target}.tar.gz"
         archive = directory / name
         checksum = directory / f"{name}.sha256"
         expected.update((name, checksum.name))

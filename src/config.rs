@@ -507,8 +507,6 @@ fn config_path(config_arg: Option<&Path>, cwd: &Path) -> Result<PathBuf, ConfigE
 
 fn home_dir() -> Result<PathBuf, ConfigError> {
     let home = env::var_os("HOME").filter(|value| !value.is_empty());
-    #[cfg(windows)]
-    let home = home.or_else(|| env::var_os("USERPROFILE").filter(|value| !value.is_empty()));
     home.map(PathBuf::from).ok_or(ConfigError::MissingHome)
 }
 

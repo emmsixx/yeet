@@ -254,6 +254,9 @@ fn terminate_process(child: &mut std::process::Child, grouped: bool) {
         let group = format!("-{pid}");
         let _ = Command::new("/bin/kill")
             .args(["-KILL", "--", group.as_str()])
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
             .status();
     }
     let _ = child.kill();

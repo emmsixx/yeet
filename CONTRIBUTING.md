@@ -58,7 +58,7 @@ known limitations. Update user docs and `CHANGELOG.md` for user-visible changes.
 Use descriptive commits; contributions do not require Conventional Commits.
 Keep unrelated formatting and refactors separate.
 
-CI runs formatting, Clippy, Rust tests on Linux/macOS/Windows, current-stable
+CI runs formatting, Clippy, Rust tests on Linux/macOS, current-stable
 compatibility tests, documentation builds, local documentation links, source
 packaging, and distribution tests. Release builds additionally test every shipped
 target. Maintainers should require the `CI passed` check before merging.

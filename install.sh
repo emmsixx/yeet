@@ -9,7 +9,7 @@ Usage: sh install.sh [--version VERSION] [--bin-dir DIRECTORY]
 
 Install the latest stable release, or select an exact version (with or without v).
 Defaults: YEET_VERSION=latest, YEET_INSTALL_DIR=$HOME/.local/bin
-Linux and macOS, x86_64 and ARM64. Windows: download the release ZIP manually.
+Linux and macOS, x86_64 and ARM64.
 Rerun to upgrade a script-managed install. Use your package manager for its installs.
 EOF
 }
