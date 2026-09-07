@@ -1,0 +1,23 @@
+# Example configuration for Yeet's first usable alpha.
+version = 1
+
+[generation]
+profile = "default"
+instructions_file = "instructions.md"
+
+[profiles.default]
+harness = "codex"
+model = "gpt-5.6-luna"
+
+[profiles.default.options]
+reasoning_effort = "low"
+
+[workflow]
+push = true
+
+[commit]
+style = "repository" # repository | conventional | custom
+
+[context]
+stat_max_chars = 6000
+patch_max_chars = 40000

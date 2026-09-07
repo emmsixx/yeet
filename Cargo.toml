@@ -1,0 +1,43 @@
+[package]
+name = "yeet-cli"
+version = "0.1.0-alpha.1"
+edition = "2024"
+rust-version = "1.94.1"
+description = "A Git workflow CLI with pluggable commit-message generation"
+repository = "https://github.com/emmsixx/yeet"
+documentation = "https://github.com/emmsixx/yeet/tree/main/docs"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+keywords = ["git", "cli", "commit", "workflow"]
+categories = ["command-line-utilities", "development-tools"]
+# Enable only after choosing an available registry name and completing v0.1.
+publish = false
+include = [
+    "src/**", "tests/*.rs", "tests/test_*.py", "scripts/*.py", "docs/**", "examples/**", ".github/**",
+    "Cargo.toml", "Cargo.lock", "rust-toolchain.toml", "install.sh",
+    "README.md", "CONTRIBUTING.md", "CHANGELOG.md", "SECURITY.md", "LICENSE",
+]
+
+[[bin]]
+name = "yeet"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive", "env"] }
+ctrlc = "3.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tempfile = "3.13"
+toml = "0.8"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
