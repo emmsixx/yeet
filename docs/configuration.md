@@ -1,68 +1,52 @@
 # Configuration
 
-This guide describes the configuration loader and override behavior in the
-current alpha release.
-
-Use `$XDG_CONFIG_HOME/yeet/config.toml` when XDG_CONFIG_HOME is absolute, otherwise
-`~/.config/yeet/config.toml`. Writing guidance belongs in `instructions.md` next
-to the config. Start with the [complete config example](../examples/config.toml)
-and [Markdown example](../examples/instructions.md).
-
-## Harness and model
-
-A named profile selects a harness, model, and adapter-specific options:
+Run `yeet config init`, then edit `~/.config/yeet/config.toml`.
+An absolute `$XDG_CONFIG_HOME` replaces `~/.config`. Use `yeet config show`
+to see the resolved settings.
 
 ```toml
-[generation]
-profile = "default"
-instructions_file = "instructions.md"
+version = 1
 
 [profiles.default]
 harness = "codex"
 model = "gpt-5.6-luna"
 
-[profiles.default.options]
-reasoning_effort = "low"
-```
-
-The current adapter invokes authenticated `codex exec` directly. The chosen model
-is a configurable preference, not a guarantee of account access. Credentials
-remain with the harness. Additional adapters can reuse the same application
-workflow.
-
-Generated runs pass the prompt over standard input and request the final message
-through `--output-last-message` and `--output-schema`. Yeet supplies
-`--ephemeral`, `--sandbox read-only`, `-c approval_policy="never"`, and
-`--ignore-rules`; it does not grant the harness write access to the repository
-or store authentication credentials.
-
-## Writing style
-
-```toml
 [commit]
 style = "repository"
 ```
 
-- `repository`: use recent local commit messages as style examples; fall back to
-  concise plain-text subjects when there is no eligible history.
-- `conventional`: require Conventional Commit syntax and Yeet's lowercase,
-  72-character, and no-trailing-period rules.
-- `custom`: use your Markdown file and/or one-off instructions as the primary
-  style. Generated mode requires nonempty instructions.
+## Writing style
 
-`--style` overrides the setting for a run. `--instructions-file PATH` selects a
-different file; `--instructions "..."` adds one-off guidance. Repository and custom
-styles do not require Conventional Commit prefixes. Manual messages bypass the
-model, history sampling, and instruction loading.
+- `repository` (default): follow recent commit messages.
+- `conventional`: require `type(scope): description`, with optional scope or `!`,
+  lowercase type, at most 72 characters, and no trailing period.
+- `custom`: follow your instructions. Generated mode requires some guidance.
 
-## Resolution and validation
+Put persistent guidance in `instructions.md` beside the config, or supply it per run:
 
-CLI flags override `YEET_PROFILE`, `YEET_MODEL`, and `YEET_STYLE`, which override
-config and then defaults. `--config PATH` selects an explicit config file.
-Config-relative paths resolve beside that config; CLI paths resolve from the
-invocation directory. Unknown keys and invalid settings fail before staging.
+```sh
+yeet --style conventional
+yeet --instructions "Mention ticket PROJ-123"
+yeet --style custom --instructions-file ./team-style.md
+```
 
-There is no automatic repository-local config loading in this release.
-Custom instructions cannot authorize extra tools or override workflow confirmation.
-The [architecture](architecture.md) specifies full precedence, legacy environment
-compatibility, history limits, and validation behavior.
+`--instructions-file` replaces the default file; `--instructions` adds guidance.
+Manual messages skip instruction loading and generation.
+
+## Models and profiles
+
+Codex is the currently supported harness. It handles authentication.
+Add named profiles under `[profiles.NAME]` and choose one with `--profile NAME`.
+Use `--model MODEL` for a one-off model override. Set reasoning effort under
+`[profiles.NAME.options]` with `reasoning_effort = "low"`.
+
+Flags override `YEET_PROFILE`, `YEET_MODEL`, and `YEET_STYLE`, then config, then
+built-in defaults. Legacy `YEET_CODEX_MODEL` and `YEET_CODEX_REASONING_EFFORT`
+are also accepted for Codex; `YEET_MODEL` takes priority over the legacy model.
+
+`--config PATH` selects another config. Paths inside it are relative to that file;
+CLI paths are relative to your working directory. Repository-local config is
+not loaded automatically.
+
+See the [full config example](../examples/config.toml) for instruction-file,
+push, and context-limit settings.
