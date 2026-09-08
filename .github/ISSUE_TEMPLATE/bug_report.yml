@@ -5,7 +5,7 @@ body:
     id: version
     attributes:
       label: Yeet version and installation method
-      placeholder: "yeet --version; source, release archive, or installer"
+      placeholder: "yeet --version; Homebrew, source, release archive, or installer"
     validations:
       required: true
   - type: input

@@ -1,5 +1,14 @@
 # Install and update
 
+## Homebrew
+
+```sh
+brew install emmsixx/tap/yeet
+```
+
+Update with `brew update && brew upgrade emmsixx/tap/yeet`; uninstall with
+`brew uninstall yeet`. Use Homebrew to update a Homebrew installation.
+
 ## From source
 
 Requires Git, Rust, and a native linker on macOS or Linux:
@@ -15,7 +24,7 @@ The checkout pins Rust 1.94.1. To update, pull the latest source and rerun
 
 ## Release installer
 
-Once a release is published, download its installer and select a version:
+Download the alpha installer and select its version:
 
 ```sh
 version=v0.1.0-alpha.1
@@ -43,4 +52,5 @@ release. Verify with `sha256sum -c ARCHIVE.sha256` on Linux or
 Optional provenance check: `gh attestation verify ARCHIVE --repo emmsixx/yeet`.
 
 Older OS versions are unverified; musl systems need a source build.
-Apple notarization is not configured. Package-manager distribution is planned.
+Apple notarization is not configured. Homebrew is available; crates.io and distro
+packages are not yet published.

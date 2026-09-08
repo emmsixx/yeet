@@ -13,13 +13,13 @@ your own messages need only Git.
 
 ## Install
 
-With Rust installed:
-
 ```sh
-git clone https://github.com/emmsixx/yeet.git
-cd yeet
-cargo install --path . --locked
+brew install emmsixx/tap/yeet
 ```
+
+Or use the [installer or release archives](docs/installation.md)—no Rust needed.
+[First alpha](https://github.com/emmsixx/yeet/releases/tag/v0.1.0-alpha.1):
+feedback and [bug reports](https://github.com/emmsixx/yeet/issues) welcome.
 
 ## Options
 
