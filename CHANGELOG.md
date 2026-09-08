@@ -1,9 +1,9 @@
 # Changelog
 
 All user-visible changes are recorded here. Release tags use `vMAJOR.MINOR.PATCH`,
-optionally followed by a prerelease suffix. No release has been published yet.
+optionally followed by a prerelease suffix.
 
-## Unreleased
+## 0.1.0-alpha.1 — 2026-09-08
 
 ### Added
 

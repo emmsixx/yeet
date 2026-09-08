@@ -26,7 +26,7 @@ def formula(tag, checksums):
 
     lines = [
         "class Yeet < Formula",
-        '  desc "Git workflow CLI with configurable commit-message generation"',
+        '  desc "Commit and push in one command"',
         '  homepage "https://github.com/emmsixx/yeet"',
         f'  version "{tag[1:]}"',
         '  license "GPL-3.0-or-later"',
